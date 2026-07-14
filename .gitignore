@@ -1,0 +1,61 @@
+# ==========================
+# Python
+# ==========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+.env
+.python-version
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Logs
+*.log
+
+# SQLite
+*.sqlite3
+
+# ==========================
+# Uploads
+# ==========================
+backend/app/uploads/documents/*
+!backend/app/uploads/documents/.gitkeep
+
+# OCR Generated Images
+backend/app/uploads/**/*.png
+
+# ==========================
+# Elasticsearch
+# ==========================
+.elasticsearch/
+
+# ==========================
+# Node
+# ==========================
+frontend/node_modules/
+
+frontend/dist/
+
+# ==========================
+# React
+# ==========================
+frontend/.vite/
+
+# ==========================
+# Docker
+# ==========================
+*.pid
+
+# ==========================
+# OS
+# ==========================
+Thumbs.db
+.DS_Store
