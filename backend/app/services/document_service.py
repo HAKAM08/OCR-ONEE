@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.enums.document_status import DocumentStatus
 from app.models.document import Document
 from app.repositories.document_repository import DocumentRepository
+from app.repositories.ocr_result_repository import OCRResultRepository
 from app.services.file_service import FileService
 
 
@@ -91,7 +92,29 @@ class DocumentService:
         if document is None:
             raise ValueError("Document not found.")
 
+        OCRResultRepository.delete_by_document_id(
+            db,
+            document_id
+        )
+
         DocumentRepository.delete(
             db,
             document
         )
+        
+@staticmethod
+def get_paginated_documents(
+    db: Session,
+    page: int,
+    page_size: int,
+):
+
+    return DocumentRepository.get_paginated(
+
+        db,
+
+        page,
+
+        page_size,
+
+    )        

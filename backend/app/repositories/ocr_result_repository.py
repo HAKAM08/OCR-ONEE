@@ -40,3 +40,23 @@ class OCRResultRepository:
     def delete(db: Session, ocr_result: OCRResult) -> None:
         db.delete(ocr_result)
         db.commit()
+        
+    @staticmethod
+    def delete_by_document_id(
+        db: Session,
+        document_id: int
+    ) -> None:
+
+        result = (
+            db.query(OCRResult)
+            .filter(
+                OCRResult.document_id == document_id
+            )
+            .first()
+        )
+
+        if result is not None:
+
+            db.delete(result)
+
+            db.commit()
