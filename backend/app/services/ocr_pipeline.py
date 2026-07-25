@@ -1,36 +1,38 @@
 from app.database.database import SessionLocal
+
 from app.enums.document_status import DocumentStatus
+
 from app.models.ocr_result import OCRResult
 
 from app.repositories.document_repository import DocumentRepository
 from app.repositories.ocr_result_repository import OCRResultRepository
 
-from app.schemas import document
 from app.services.converters.document_conversion_service import (
     DocumentConversionService,
 )
+
+from app.services.docx_service import DOCXService
+from app.services.ocr_correction_service import OCRCorrectionService
+from app.services.language_detection_service import LanguageDetectionService
 from app.services.ocr_service import OCRService
+
+from app.core.ocr.ocr_processing_result import OCRProcessingResult
+
 from app.elasticsearch.index_service import IndexService
+
 
 class OCRPipeline:
     """
     Complete OCR processing pipeline.
 
-    Workflow:
+    Images / PDFs
+        -> Convert to images
+        -> OCR
+        -> AI correction
 
-        Retrieve document
-                │
-                ▼
-        Convert document to images
-                │
-                ▼
-        OCR Engine
-                │
-                ▼
-        Save OCR Result
-                │
-                ▼
-        Update document status
+    DOCX
+        -> Extract text
+        -> AI correction
     """
 
     @staticmethod
@@ -40,47 +42,65 @@ class OCRPipeline:
 
         try:
 
-            # ----------------------------
-            # Retrieve document
-            # ----------------------------
-
             document = DocumentRepository.get_by_id(
                 db,
-                document_id
+                document_id,
             )
 
             if document is None:
                 raise ValueError("Document not found.")
 
-            # ----------------------------
-            # Update status
-            # ----------------------------
-
             DocumentRepository.update_status(
                 db,
                 document.id,
-                DocumentStatus.PROCESSING.value
+                DocumentStatus.PROCESSING.value,
             )
 
-            # ----------------------------
-            # Convert document
-            # ----------------------------
+            extension = document.file_type.lower()
 
-            images = DocumentConversionService.convert(
-                document.file_path
-            )
+            # ===================================================
+            # DOCX
+            # ===================================================
 
-            # ----------------------------
-            # OCR Engine
-            # ----------------------------
+            if extension == ".docx":
 
-            result = OCRService.process_images(
-                images
-            )
+                text = DOCXService.extract_text(
+                    document.file_path
+                )
 
-            # ----------------------------
+                result = OCRProcessingResult(
+
+                    text=text,
+
+                    confidence=100.0,
+
+                    language=LanguageDetectionService.detect(
+                        text
+                    ),
+
+                    processing_time=0,
+
+                    page_count=1,
+
+                )
+
+            # ===================================================
+            # PDF / Images
+            # ===================================================
+
+            else:
+
+                images = DocumentConversionService.convert(
+                    document.file_path
+                )
+
+                result = OCRService.process_images(
+                    images
+                )
+
+            # ===================================================
             # Save OCR Result
-            # ----------------------------
+            # ===================================================
 
             ocr_result = OCRResult(
 
@@ -96,32 +116,32 @@ class OCRPipeline:
 
                 engine_version="Tesseract 5",
 
-                document_id=document.id
+                document_id=document.id,
 
             )
 
             OCRResultRepository.create(
                 db,
-                ocr_result
+                ocr_result,
             )
-            
-            # ----------------------------
-            # Index document in Elasticsearch
-            # ----------------------------
+
+            # ===================================================
+            # Elasticsearch
+            # ===================================================
 
             IndexService.index_document(
                 document,
-                ocr_result
+                ocr_result,
             )
 
-            # ----------------------------
-            # Update document status
-            # ----------------------------
+            # ===================================================
+            # Completed
+            # ===================================================
 
             DocumentRepository.update_status(
                 db,
                 document.id,
-                DocumentStatus.OCR_COMPLETED.value
+                DocumentStatus.OCR_COMPLETED.value,
             )
 
             return ocr_result
@@ -133,7 +153,7 @@ class OCRPipeline:
                 DocumentRepository.update_status(
                     db,
                     document.id,
-                    DocumentStatus.FAILED.value
+                    DocumentStatus.FAILED.value,
                 )
 
             raise

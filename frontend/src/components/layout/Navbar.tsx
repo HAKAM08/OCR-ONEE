@@ -19,7 +19,7 @@ export default function Navbar() {
       <div className="flex items-center gap-4">
 
         <h2 className="text-2xl font-semibold text-slate-800">
-          Dashboard
+          Welcome, {user?.sub}
         </h2>
 
       </div>
@@ -28,11 +28,7 @@ export default function Navbar() {
 
         
 
-        <button className="rounded-lg p-2 transition hover:bg-slate-100">
 
-          <Bell size={20} />
-
-        </button>
 
         <div className="flex items-center gap-3">
 

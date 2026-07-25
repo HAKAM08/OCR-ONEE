@@ -3,15 +3,22 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import { UploadAPI } from "@/api/upload";
+import {
+  UploadAPI,
+  UploadRequest,
+} from "@/api/upload";
 
 export function useUpload() {
+
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: UploadAPI.upload,
+
+    mutationFn: (data: UploadRequest) =>
+      UploadAPI.upload(data),
 
     onSuccess: () => {
+
       queryClient.invalidateQueries({
         queryKey: ["documents"],
       });
@@ -19,6 +26,9 @@ export function useUpload() {
       queryClient.invalidateQueries({
         queryKey: ["dashboard"],
       });
+
     },
+
   });
+
 }

@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from xml.dom.minidom import DocumentType
 
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
@@ -24,7 +25,8 @@ class DocumentService:
     def upload_document(
         db: Session,
         file: UploadFile,
-        owner_id: int
+        owner_id: int,
+        document_type: DocumentType
     ) -> Document:
         """
         Uploads a document and stores its metadata.
@@ -33,14 +35,15 @@ class DocumentService:
         file_data = FileService.save_file(file)
 
         document = Document(
-            original_filename=file_data["original_filename"],
-            filename=file_data["filename"],
-            file_type=file_data["extension"],
-            file_path=file_data["filepath"],
-            upload_date=datetime.now(UTC),
-            status=DocumentStatus.UPLOADED.value,
-            owner_id=owner_id
-        )
+    original_filename=file_data["original_filename"],
+    filename=file_data["filename"],
+    file_type=file_data["extension"],
+    file_path=file_data["filepath"],
+    upload_date=datetime.now(UTC),
+    status=DocumentStatus.UPLOADED.value,
+    owner_id=owner_id,
+    document_type=document_type.value
+)
 
         return DocumentRepository.create(
             db,

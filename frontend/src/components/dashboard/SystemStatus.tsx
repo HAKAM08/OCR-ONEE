@@ -1,4 +1,5 @@
 import {
+    Brain,
     CheckCircle2,
     Database,
     ScanText,
@@ -26,6 +27,12 @@ export default function SystemStatus() {
         {
             name: "Elasticsearch",
             icon: Search,
+            color: "text-green-600",
+        },
+
+        {
+            name: "Ollama LLM",
+            icon: Brain,
             color: "text-green-600",
         },
 

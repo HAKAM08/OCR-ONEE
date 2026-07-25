@@ -66,6 +66,6 @@ class Settings:
         "ELASTICSEARCH_INDEX",
         "documents"
     )
-
+    GOOGLE_API_KEY: str = os.getenv("GOOGLE_API_KEY")
 
 settings = Settings()

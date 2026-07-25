@@ -11,5 +11,8 @@ class DocumentResponse(BaseModel):
     upload_date: datetime
     status: str
     owner_id: int
+    document_type: str
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True
+    )

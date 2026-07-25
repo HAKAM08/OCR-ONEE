@@ -7,10 +7,14 @@ from app.core.ocr.ocr_processing_result import OCRProcessingResult
 from app.services.image_processing_service import ImageProcessingService
 from app.services.text_cleaning_service import TextCleaningService
 from app.services.language_detection_service import LanguageDetectionService
-
+from app.services.ocr_correction_service import OCRCorrectionService
+from app.services.ocr_correction_service import OCRCorrectionService
 # Configure Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = settings.TESSERACT_CMD
-
+from app.services.image_processing_service import ImageProcessingService
+from app.services.text_cleaning_service import TextCleaningService
+from app.services.language_detection_service import LanguageDetectionService
+from app.services.ocr_correction_service import OCRCorrectionService
 
 class OCRService:
     """
@@ -82,6 +86,13 @@ class OCRService:
             raw_text
         )
 
+        corrected_text = OCRCorrectionService.correct(
+            cleaned_text
+        )
+        corrected_text = OCRCorrectionService.correct(
+            cleaned_text
+)
+
         data = cls.extract_data(
             processed_image
         )
@@ -91,7 +102,7 @@ class OCRService:
         )
 
         return (
-            cleaned_text,
+            corrected_text,
             confidence
         )
 
