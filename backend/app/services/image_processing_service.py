@@ -1,25 +1,4 @@
 import cv2
-from matplotlib import image
-import numpy as np
-
-
-class ImageProcessingService:
-
-    @staticmethod
-    def load_image(path: str):
-
-        return cv2.imread(path)
-    @staticmethod
-    
-    def grayscale(image):
-
-        return cv2.cvtColor(
-        image,
-        cv2.COLOR_BGR2GRAY
-    )
-
-    @staticmethod
-    def denoise(image):import cv2
 
 
 class ImageProcessingService:
@@ -120,31 +99,5 @@ class ImageProcessingService:
         image = cls.threshold(image)
 
         image = cls.morphology(image)
-
-        return image
-
-        return cv2.medianBlur(
-        image,
-        3
-    )
-        
-    @staticmethod
-    def denoise(image):
-
-        return cv2.medianBlur(
-        image,
-        3
-    )
-        
-    @classmethod
-    def preprocess(cls, path):
-
-        image = cls.load_image(path)
-
-        image = cls.grayscale(image)
-
-        image = cls.denoise(image)
-
-        image = cls.threshold(image)
 
         return image

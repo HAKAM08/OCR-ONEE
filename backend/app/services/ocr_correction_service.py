@@ -7,7 +7,7 @@ class OCRCorrectionService:
     to improve OCR text.
     """
 
-    URL = "http://localhost:11434/api/generate"
+    URL = "http://ollama:11434/api/generate"
     MODEL = "llama3.2:1b"
 
     @classmethod
