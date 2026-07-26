@@ -1,0 +1,82 @@
+# ==========================
+# Python
+# ==========================
+
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# Environment variables
+.env
+**/.env
+
+.python-version
+
+# ==========================
+# IDE
+# ==========================
+
+.vscode/
+.idea/
+
+# ==========================
+# Logs
+# ==========================
+
+*.log
+
+# ==========================
+# Database
+# ==========================
+
+*.sqlite3
+
+# ==========================
+# Uploads
+# ==========================
+
+backend/app/uploads/
+!backend/app/uploads/.gitkeep
+
+# OCR temporary images
+backend/app/uploads/**/*.png
+
+# ==========================
+# Elasticsearch
+# ==========================
+
+.elasticsearch/
+
+# ==========================
+# Node
+# ==========================
+
+frontend/node_modules/
+frontend/dist/
+
+# Vite
+frontend/.vite/
+
+# ==========================
+# Docker
+# ==========================
+
+*.pid
+
+postgres_data/
+elasticsearch_data/
+ollama_data/
+
+# ==========================
+# OS
+# ==========================
+
+Thumbs.db
+.DS_Store
